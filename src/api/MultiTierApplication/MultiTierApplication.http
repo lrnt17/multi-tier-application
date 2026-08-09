@@ -1,0 +1,6 @@
+@MultiTierApplication_HostAddress = http://localhost:5143
+
+GET {{MultiTierApplication_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
