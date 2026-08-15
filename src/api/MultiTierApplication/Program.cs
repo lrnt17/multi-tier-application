@@ -41,4 +41,5 @@ app.MapDelete("/todos/{id}", async (int id, TodoDb db) =>
     return Results.NotFound();
 });
 
+// Runs the application
 app.Run();
