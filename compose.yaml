@@ -1,0 +1,27 @@
+services:
+  api:
+    build: ./src/api/MultiTierApplication
+    ports:
+      - "8000:8080"
+    environment:
+      ConnectionStrings__Default: "Host=db;Database=todos;Username=postgres;Password=devpass"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: devpass
+      POSTGRES_DB: todos
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
