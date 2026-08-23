@@ -1,6 +1,8 @@
 services:
   api:
-    build: ./src/api/MultiTierApplication
+    build:
+      context: ./src/api/MultiTierApplication
+      target: runtime
     ports:
       - "8000:8080"
     environment:
@@ -8,6 +10,19 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+
+  migrator:
+    build:
+      context: ./src/api/MultiTierApplication
+      target: migrator
+    environment:
+      ConnectionStrings__Default: "Host=db;Database=todos;Username=postgres;Password=devpass"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
 
   db:
     image: postgres:16-alpine
@@ -22,6 +37,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  web:
+    build:
+      context: ./src/web
+    ports:
+      - "3000:8080"
+    depends_on:
+      - api
 
 volumes:
   pgdata:
