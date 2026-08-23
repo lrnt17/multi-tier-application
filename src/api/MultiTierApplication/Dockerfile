@@ -17,6 +17,7 @@ COPY --from=build /app/publish .
 ENV ASPNETCORE_HTTP_PORTS=8080
 EXPOSE 8080
 
+USER 1654
 ENTRYPOINT ["dotnet", "MultiTierApplication.dll"]
 
 # ---- Stage: build the migration bundle ----
