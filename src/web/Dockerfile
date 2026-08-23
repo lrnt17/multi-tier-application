@@ -15,8 +15,9 @@ COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 RUN chown -R 101:101 /var/cache/nginx /etc/nginx/conf.d \
- && mkdir -p /tmp/nginx && chown 101:101 /tmp/nginx \
- && sed -i 's|^pid .*|pid /tmp/nginx/nginx.pid;|' /etc/nginx/nginx.conf
+ #&& mkdir -p /tmp/nginx && chown 101:101 /tmp/nginx \
+ #&& sed -i 's|^pid .*|pid /tmp/nginx/nginx.pid;|' /etc/nginx/nginx.conf
+ && sed -i 's|^pid .*|pid /tmp/nginx.pid;|' /etc/nginx/nginx.conf
 
 EXPOSE 8080
 USER 101
