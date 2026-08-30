@@ -23,6 +23,25 @@ jobs:
       - name: Build all images
         run: docker compose build
 
+      - name: Scan API image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: docker-multitier-wbs-api:latest
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
+      - name: Scan web image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: docker-multitier-wbs-web:latest
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
+      - name: Scan for secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Start the stack
         run: docker compose up -d --wait
 
