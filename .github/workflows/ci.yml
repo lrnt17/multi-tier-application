@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-smoke-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Create .env from example
+        run: cp .env.example .env
+
+      - name: Build all images
+        run: docker compose build
+
+      - name: Start the stack
+        run: docker compose up -d --wait
+
+      - name: Verify API health
+        run: curl -fsS http://localhost:8000/healthz
+
+      - name: Verify proxy path
+        run: curl -fsS http://localhost:3000/api/todos
+
+      - name: Verify write path
+        run: |
+          curl -fsS -X POST http://localhost:8000/todos \
+            -H "Content-Type: application/json" \
+            -d '{"title":"ci smoke test","done":false}'
+          curl -fsS http://localhost:8000/todos | grep "ci smoke test"
+
+      - name: Dump logs on failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
