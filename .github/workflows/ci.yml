@@ -21,7 +21,7 @@ jobs:
         run: cp .env.example .env
 
       - name: Build all images
-        run: docker compose build
+        run: docker compose build --pull
 
       - name: List built images
         run: docker images
