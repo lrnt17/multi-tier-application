@@ -8,7 +8,8 @@ builder.Services.AddDbContext<TodoDb>(opt =>
 
 var app = builder.Build();
 
-app.MapGet("/healthz", () => Results.Ok(new { status = "healthy" }));
+//app.MapGet("/healthz", () => Results.Ok(new { status = "healthy" }));
+app.MapGet("/healthz", () => Results.StatusCode(500));
 
 // Returns all todos from the database
 app.MapGet("/todos", async (TodoDb db) =>
