@@ -1,3 +1,5 @@
+name: docker-multitier-wbs
+
 services:
   api:
     build:
