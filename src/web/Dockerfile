@@ -20,4 +20,5 @@ RUN chown -R 101:101 /var/cache/nginx /etc/nginx/conf.d \
  && sed -i 's|^pid .*|pid /tmp/nginx.pid;|' /etc/nginx/nginx.conf
 
 EXPOSE 8080
+RUN apk upgrade --no-cache libssl3 libcrypto3
 USER 101
